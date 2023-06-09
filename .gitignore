@@ -1,0 +1,18 @@
+
+# Unit test / coverage reports
+.pytest_cache/
+cover/
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+
+.idea
+__pycache__/
+
