@@ -132,7 +132,7 @@ class Basemodel(BaseMethods):
 
         self.main_page_navigation_menu()
 
-    def examples_button_for_scroll_to_slider(self):
+    def examples_button_for_scroll_to_slider(self, page_url: str):
         """ Кнопка Примеры и скролл до слайдера с примерами"""
         window_start_offset = self.driver.execute_script(
             'return window.pageYOffset')  # проверяем что текущее положение == 0
@@ -140,7 +140,8 @@ class Basemodel(BaseMethods):
 
         examples_button = self.find_by("xpath", self.element.examples_button)
         examples_button.click()
-        time.sleep(1)
+        time.sleep(2)
+        assert self.driver.current_url == f'{page_url}#examples', f"Адрес страницы не соответствует {self.driver.current_url}"
 
         examples_section_offset = self.find_by("xpath", self.element.examples_section).get_property("offsetTop")
         window_y = self.driver.execute_script('return window.pageYOffset')
@@ -347,14 +348,43 @@ class Basemodel(BaseMethods):
         for item in nav_views_list_items:
             assert item.is_displayed(), f"Пример {item.text.strip()} не отображается"
 
-        logo_in_navigation.click()
+        # logo_in_navigation.click()
+        self.action.move_to_element(logo_in_navigation).perform()
 
         # Блок со списком видов в навигации
         views_dropdown_panel = self.find_by("xpath", self.element.nav_views_dropdown_panel)
         assert not views_dropdown_panel.is_displayed(), "Список видов отображается"
 
-    def go_to_page(self, *args):
-        """Переход на другую страницу раздела в меню навигации"""
-        for i in args:
-            self.find_by("xpath", self.element.page_link_on_navigation_menu(i)).click()
+    def check_urls_views_dropdown(self):
+        # Наводим на раздел Виды
+        views_item = self.find_by("xpath", self.element.views_item)
+        self.action.move_to_element(views_item).perform()
+        time.sleep(1)
+
+        # Получаем список видов в навигации
+        nav_views_list_items = self.finds_by("xpath", self.element.nav_views_list_items)
+
+        # Убираем курсор от выпадающего списка
+        logo_in_navigation = self.find_by("xpath", self.element.logo_name_in_menu)
+        # logo_in_navigation.click()
+        self.action.move_to_element(logo_in_navigation).perform()
+        time.sleep(1)
+
+        # Цикл - наведение на Виды и переход
+        for item in range(len(nav_views_list_items)):
+            self.action.move_to_element(views_item).perform()
+            time.sleep(1)
+
+            link_url = self.get_attribute_from_one_element("href", nav_views_list_items[item])
+            link_text = self.get_text_from_one_element(nav_views_list_items[item])
+
+            nav_views_list_items[item].click()
             time.sleep(2)
+            title = self.find_and_get_text("xpath", self.element.title)
+
+            assert self.driver.current_url == link_url, f'Адрес страницы не соответствует {self.driver.current_url}'
+            assert title == link_text, f'Заголовок не соответствует {title}'
+
+    def check_views_page(self):
+        pass
+

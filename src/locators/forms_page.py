@@ -17,7 +17,7 @@ class FormsPage:
     @property
     # Список видов в навигации
     def nav_views_list_items(self) -> str:
-        return "//div[contains(@class, 'content')]//ul[@class='list']//li[@class='list-item']"
+        return "//div[contains(@class, 'content')]//ul[@class='list']//li[@class='list-item']/a"
 
     """ Интерактивный слайдер """
 

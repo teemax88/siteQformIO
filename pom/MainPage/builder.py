@@ -56,7 +56,7 @@ class MainPage(Basemodel):
             time.sleep(2)
 
             # Передаем сохраненную ссылку очередной карточки и передаем ее в функцию для проверки соответствия страницы
-            self.other_navigation_menu(card_link, service_cards_title_list[card])
+            self.other_page_navigation_menu(card_link, service_cards_title_list[card])
 
             official_logo.click()
             time.sleep(2)

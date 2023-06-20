@@ -8,7 +8,7 @@ from variables import URL
 def browser(request):
     if request.param == "Chrome":
         options = webdriver.ChromeOptions()
-        # options.add_argument("--headless")
+        options.add_argument("--headless")
         options.add_argument('--no-sandbox')
         options.add_argument('--ignore-ssl-errors=yes')
         options.add_argument('--ignore-certificate-errors')
