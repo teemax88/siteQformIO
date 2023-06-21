@@ -12,7 +12,7 @@ class MainPage:
     @property
     # Главный логотип страницы
     def official_logo(self) -> str:
-        return "//div[@class='header-container']//a"
+        return "//a[@class='link-active']"
 
     @property
     # Кнопка Вход
@@ -192,6 +192,7 @@ class MainPage:
     # Список ссылок авторских прав в блоке Footer
     def footer_license_agreements(self) -> str:
         return "//div[@class='copyright']//span[@class='copyright__item']/a"
+        # return "//div[@class='copyright']//span[@class='copyright__item']/a[contains(text(), 'договор')]"
 
     # *********************************************************************************************
 

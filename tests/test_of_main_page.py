@@ -58,22 +58,3 @@ class TestCaseMainPage:
         """ Проверяем блок с гиф инструкцией по созданию формы """
         app.gif_for_insert_form()
 
-    # *********************************************
-
-    @pytest.mark.skip
-    def test_quiz_constructor_button(self, browser):
-        app = MainPage(browser)
-        """ Проверяем кнопку Конструктор квизов """
-        app.quiz_constructor_button(QUIZPAGE)
-
-    @pytest.mark.skip
-    def test_videowidget_button(self, browser):
-        app = MainPage(browser)
-        """ Проверяем кнопку Видеовиджет """
-        app.videowidget_button(VIDEOPAGE)
-
-    @pytest.mark.skip
-    def test_qlink_button(self, browser):
-        app = MainPage(browser)
-        """ Проверяем кнопку Qlink """
-        app.qlink_button()

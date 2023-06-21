@@ -39,7 +39,6 @@ class MainPage(Basemodel):
 
     def service_cards(self):
         """ Проверка кнопок на карточках с сервисами"""
-        official_logo = self.find_by("xpath", self.element.official_logo)
         service_cards = self.are_visible("xpath", self.element.service_cards)
         service_cards_title = self.are_visible("xpath", self.element.service_cards_title)
         service_cards_title_list = self.get_text_all_webelements(service_cards_title)
@@ -58,24 +57,9 @@ class MainPage(Basemodel):
             # Передаем сохраненную ссылку очередной карточки и передаем ее в функцию для проверки соответствия страницы
             self.other_page_navigation_menu(card_link, service_cards_title_list[card])
 
+            official_logo = self.find_by("xpath", self.element.official_logo)
             official_logo.click()
             time.sleep(2)
-
-    def quiz_constructor_button(self, page_url):
-        """ Проверка кнопки Конструктор квизов в панели навигации Главной страницы"""
-        self.find_by("xpath", self.element.quiz_constructor_button).click()
-        time.sleep(2)
-
-        self.other_navigation_menu(page_url)
-        self.top_menu()
-
-    def videowidget_button(self, page_url):
-        """ Проверка кнопки Видеовиджет в панели навигации Главной страницы"""
-        self.find_by("xpath", self.element.videowidget_button).click()
-        time.sleep(2)
-
-        self.other_navigation_menu(page_url)
-        self.top_menu()
 
     def qlink_button(self):
         """ Проверка кнопки Qlink в панели навигации Главной страницы"""

@@ -230,6 +230,8 @@ class Basemodel(BaseMethods):
             time.sleep(4)
 
             assert self.driver.current_url == social_link, f"Адрес страницы не соответствует {social_link}"
+
+            self.driver.close()
             self.driver.switch_to.window(qform_window)
 
     def footer_copyright(self):
@@ -261,7 +263,7 @@ class Basemodel(BaseMethods):
 
                 self.top_menu()
                 self.main_page_navigation_menu()
-
+            self.driver.close()
             self.driver.switch_to.window(qform_window)
 
     def interactive_slider(self):
@@ -320,11 +322,10 @@ class Basemodel(BaseMethods):
         """ Проверяем меню навигации других страниц"""
 
         # Берем Заголовок страницы
-        title = self.find_by("xpath", self.element.title)
+        title = self.find_and_get_text("xpath", self.element.title)
 
         # Берем текст лого в навигации
-        logo_in_navigation = self.find_by("xpath", self.element.logo_name_in_menu)
-        logo_in_navigation_text = self.get_text_from_one_element(logo_in_navigation)
+        official_logo = self.find_by("xpath", self.element.official_logo)
 
         # Блок со списком видов в навигации
         views_dropdown_panel = self.find_by("xpath", self.element.nav_views_dropdown_panel)
@@ -333,8 +334,7 @@ class Basemodel(BaseMethods):
         demo_button = self.find_by("xpath", self.element.demo_button)
 
         assert self.driver.current_url == page_url, f"URl не соответствует {self.driver.current_url}"
-        assert title.is_displayed(), "Заголовок не отображается"
-        assert logo_in_navigation_text == text_logo, f"Заголовок не соответствует тексту у кнопки лого в меню"
+        assert title == text_logo, f"Заголовок не соответствует тексту у кнопки лого в меню"
         assert not views_dropdown_panel.is_displayed(), "Список видов отображается"
         assert demo_button.is_displayed(), "Кнопка Демо не отображается"
 
@@ -349,7 +349,7 @@ class Basemodel(BaseMethods):
             assert item.is_displayed(), f"Пример {item.text.strip()} не отображается"
 
         # logo_in_navigation.click()
-        self.action.move_to_element(logo_in_navigation).perform()
+        self.action.move_to_element(official_logo).perform()
 
         # Блок со списком видов в навигации
         views_dropdown_panel = self.find_by("xpath", self.element.nav_views_dropdown_panel)
