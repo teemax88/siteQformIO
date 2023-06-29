@@ -4,7 +4,7 @@ from variables import URL
 
 
 # "Chrome", "Firefox", "Opera", "Edge", "internet explorer", "Safari"
-@pytest.fixture(params=["Chrome"], scope="function")
+@pytest.fixture(params=["Chrome"], scope="class")
 def browser(request):
     if request.param == "Chrome":
         options = webdriver.ChromeOptions()
@@ -19,6 +19,8 @@ def browser(request):
         driver.get(URL)
         driver.delete_all_cookies()
         driver.set_page_load_timeout(10)
+        request.cls.driver = driver
+
         yield driver
 
         driver.quit()

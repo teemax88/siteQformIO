@@ -20,11 +20,15 @@ class TestCaseMainPage:
         app.demo_button(FORMPAGE)
         app.main_page_navigation_menu()
 
+        app.fin(URL)
+
     @pytest.mark.skip
     def test_of_start_button(self, browser):
         app = MainPage(browser)
         """ Проверяем кнопку Начать """
         app.start_button()
+
+        app.fin(URL)
 
     @pytest.mark.skip
     def test_service_cards(self, browser):
@@ -38,6 +42,8 @@ class TestCaseMainPage:
         """ Проверяем кнопку по услуге создания форм"""
         app.offer_creation()
 
+        app.fin(URL)
+
     @pytest.mark.skip
     def test_check_footer(self, browser):
         app = MainPage(browser)
@@ -47,6 +53,8 @@ class TestCaseMainPage:
         app.footer_social_icons()
         """ Проверяем авторские права в футере"""
         app.footer_copyright()
+
+        app.fin(URL)
 
     @pytest.mark.skip
     def test_checking_main_page_elements(self, browser):

@@ -4,28 +4,34 @@ import pytest
 import time
 
 
+@pytest.mark.usefixtures("forms_page")
 class TestCaseFormsPage:
-    @pytest.mark.skip
-    def test_of_page_navigation_menu(self, forms_page):
-        app = FormsPage(driver=forms_page)
+    # @pytest.mark.skip
+    def test_of_page_navigation_menu(self):
+        app = FormsPage(self.driver)
         """ Проверяем меню навигации """
         app.other_page_navigation_menu(page_url=FORMPAGE, text_logo=forms)
 
-    @pytest.mark.skip
-    def test_demo_button(self, forms_page):
-        app = FormsPage(driver=forms_page)
+    # @pytest.mark.skip
+    def test_demo_button(self):
+        app = FormsPage(self.driver)
         """ Проверяем кнопку Демо """
         # app.demo_button(page_url=FORMPAGE)
         app.find_by("xpath", app.element.demo_button).click()
+        time.sleep(3)
 
         # Проверяем URL
         assert app.driver.current_url == f'{FORMPAGE}/demo', f"Адрес страницы не соответствует {FORMPAGE}/demo"
 
+        app.fin(FORMPAGE)
+
     @pytest.mark.skip
-    def test_of_start_button(self, forms_page):
-        app = FormsPage(driver=forms_page)
+    def test_of_start_button(self):
+        app = FormsPage(self.driver)
         """ Проверяем кнопку Начать """
         app.start_button()
+
+        app.fin(FORMPAGE)
 
     @pytest.mark.skip
     def test_offer_creation(self, forms_page):
@@ -38,6 +44,8 @@ class TestCaseFormsPage:
 
         assert app.driver.current_url == SERVICE, f"Адрес страницы не соответствует {app.driver.current_url}"
 
+        app.fin(FORMPAGE)
+
     @pytest.mark.skip
     def test_check_footer(self, forms_page):
         app = FormsPage(driver=forms_page)
@@ -47,6 +55,8 @@ class TestCaseFormsPage:
         app.footer_social_icons()
         """ Проверяем авторские права в футере"""
         app.footer_copyright()
+
+        app.fin(FORMPAGE)
 
     @pytest.mark.skip
     def test_checking_form_page_elements(self, forms_page):

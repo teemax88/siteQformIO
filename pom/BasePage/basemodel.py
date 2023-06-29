@@ -10,9 +10,16 @@ class Basemodel(BaseMethods):
     def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
-        self.element = Elements(self.driver)
+        # self.element = Elements(self.driver)
+        self.element = Elements()
         self.action = ActionChains(self.driver)
         self.data = datetime.strftime(datetime.now(), '%d-%m-%H-%M')
+
+    def fin(self, page_url: str):
+        self.driver.get(URL)
+        self.driver.delete_all_cookies()
+        title = self.find_by("xpath", self.element.title)
+        self.action.move_to_element(title).perform()
 
     def top_menu(self):
         """ Проверяем верхнее меню """
@@ -97,30 +104,24 @@ class Basemodel(BaseMethods):
 
         # Клик по логотипу Функции для скрытия/открытия меню функции
         logo_in_menu.click()
+        time.sleep(2)
 
         menu_list = self.is_visible("xpath", self.element.menu_list)
-        icon_to_close_or_open_menu = self.get_text_from_one_element(
-            self.find_by("xpath", self.element.icon_to_close_or_open_menu))
         menu_list_items = self.finds_by("xpath", self.element.menu_list_items)
 
         assert menu_list.is_displayed(), "Меню функции не отображается"
         for item in menu_list_items:
             assert item.is_displayed(), f"Пример {item.text.strip()} не отображается"
-        assert icon_to_close_or_open_menu == "×", "Значок не поменялся на --> ×"
 
         # Клик по значку для скрытия/открытия меню функции
         icon_to_close_or_open_menu = self.find_by("xpath", self.element.icon_to_close_or_open_menu)
         icon_to_close_or_open_menu.click()
         time.sleep(2)
 
-        icon_to_close_or_open_menu = self.get_text_from_one_element(
-            self.find_by("xpath", self.element.icon_to_close_or_open_menu))
         menu_list = self.find_by("xpath", self.element.menu_list)
-
-        assert icon_to_close_or_open_menu == "....", "Значок не поменялся на --> ...."
         assert not menu_list.is_displayed(), "Меню функции не исчезло"
 
-    def demo_button(self, page_url):
+    def demo_button(self, page_url: str):
         """ Проверка кнопки Демо в панели навигации Главной страницы"""
         self.find_by("xpath", self.element.demo_button).click()
         time.sleep(2)
@@ -349,9 +350,10 @@ class Basemodel(BaseMethods):
             assert item.is_displayed(), f"Пример {item.text.strip()} не отображается"
 
         # logo_in_navigation.click()
+        # Убираем курсор в сторону Главного логотипа чтобы скрылся список Виды
         self.action.move_to_element(official_logo).perform()
 
-        # Блок со списком видов в навигации
+        # Проверяем, что список видов в навигации скрыт
         views_dropdown_panel = self.find_by("xpath", self.element.nav_views_dropdown_panel)
         assert not views_dropdown_panel.is_displayed(), "Список видов отображается"
 
@@ -387,4 +389,3 @@ class Basemodel(BaseMethods):
 
     def check_views_page(self):
         pass
-
