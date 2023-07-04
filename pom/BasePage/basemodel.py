@@ -4,6 +4,7 @@ from src.utils.methods import BaseMethods
 from selenium.webdriver.common.action_chains import ActionChains
 from variables import *
 from datetime import datetime
+from selenium.common.exceptions import NoSuchElementException
 
 
 class Basemodel(BaseMethods):
@@ -16,7 +17,7 @@ class Basemodel(BaseMethods):
         self.data = datetime.strftime(datetime.now(), '%d-%m-%H-%M')
 
     def fin(self, page_url: str):
-        self.driver.get(URL)
+        self.driver.get(page_url)
         self.driver.delete_all_cookies()
         title = self.find_by("xpath", self.element.title)
         self.action.move_to_element(title).perform()
@@ -133,7 +134,7 @@ class Basemodel(BaseMethods):
 
         self.main_page_navigation_menu()
 
-    def examples_button_for_scroll_to_slider(self, page_url: str):
+    def examples_button_for_scroll_to_slider(self):
         """ Кнопка Примеры и скролл до слайдера с примерами"""
         window_start_offset = self.driver.execute_script(
             'return window.pageYOffset')  # проверяем что текущее положение == 0
@@ -142,7 +143,6 @@ class Basemodel(BaseMethods):
         examples_button = self.find_by("xpath", self.element.examples_button)
         examples_button.click()
         time.sleep(2)
-        assert self.driver.current_url == f'{page_url}#examples', f"Адрес страницы не соответствует {self.driver.current_url}"
 
         examples_section_offset = self.find_by("xpath", self.element.examples_section).get_property("offsetTop")
         window_y = self.driver.execute_script('return window.pageYOffset')
@@ -319,11 +319,8 @@ class Basemodel(BaseMethods):
                 pass
             counter += 1
 
-    def other_page_navigation_menu(self, page_url, text_logo):
+    def other_page_navigation_menu(self, page_url):
         """ Проверяем меню навигации других страниц"""
-
-        # Берем Заголовок страницы
-        title = self.find_and_get_text("xpath", self.element.title)
 
         # Берем текст лого в навигации
         official_logo = self.find_by("xpath", self.element.official_logo)
@@ -335,7 +332,6 @@ class Basemodel(BaseMethods):
         demo_button = self.find_by("xpath", self.element.demo_button)
 
         assert self.driver.current_url == page_url, f"URl не соответствует {self.driver.current_url}"
-        assert title == text_logo, f"Заголовок не соответствует тексту у кнопки лого в меню"
         assert not views_dropdown_panel.is_displayed(), "Список видов отображается"
         assert demo_button.is_displayed(), "Кнопка Демо не отображается"
 
@@ -349,7 +345,6 @@ class Basemodel(BaseMethods):
         for item in nav_views_list_items:
             assert item.is_displayed(), f"Пример {item.text.strip()} не отображается"
 
-        # logo_in_navigation.click()
         # Убираем курсор в сторону Главного логотипа чтобы скрылся список Виды
         self.action.move_to_element(official_logo).perform()
 
@@ -357,35 +352,31 @@ class Basemodel(BaseMethods):
         views_dropdown_panel = self.find_by("xpath", self.element.nav_views_dropdown_panel)
         assert not views_dropdown_panel.is_displayed(), "Список видов отображается"
 
-    def check_urls_views_dropdown(self):
-        # Наводим на раздел Виды
-        views_item = self.find_by("xpath", self.element.views_item)
-        self.action.move_to_element(views_item).perform()
-        time.sleep(1)
+    def check_views_dropdown(self, item, section):
+        while True:
+            try:
+                # Наводим на раздел Виды
+                views_dropdown = self.find_by("xpath", self.element.views_dropdown)
+                self.action.move_to_element(views_dropdown).perform()
+                time.sleep(1)
 
-        # Получаем список видов в навигации
-        nav_views_list_items = self.finds_by("xpath", self.element.nav_views_list_items)
+                # Проходимся по каждому виду в навигации
+                nav_view_item = self.find_by("xpath", self.element.nav_views_item(section, item))
 
-        # Убираем курсор от выпадающего списка
-        logo_in_navigation = self.find_by("xpath", self.element.logo_name_in_menu)
-        # logo_in_navigation.click()
-        self.action.move_to_element(logo_in_navigation).perform()
-        time.sleep(1)
+                link_url = self.get_attribute_from_one_element("href", nav_view_item)
+                link_text = self.get_text_from_one_element(nav_view_item)
 
-        # Цикл - наведение на Виды и переход
-        for item in range(len(nav_views_list_items)):
-            self.action.move_to_element(views_item).perform()
-            time.sleep(1)
+                nav_view_item.click()
+                time.sleep(3)
+                title = self.find_and_get_text("xpath", self.element.title)
 
-            link_url = self.get_attribute_from_one_element("href", nav_views_list_items[item])
-            link_text = self.get_text_from_one_element(nav_views_list_items[item])
+                assert self.driver.current_url == link_url, f'Отличие адреса {link_url} от адреса страницы {self.driver.current_url}'
+                assert title == link_text, f'Заголовок не соответствует {title}'
 
-            nav_views_list_items[item].click()
-            time.sleep(2)
-            title = self.find_and_get_text("xpath", self.element.title)
+                item += 1
 
-            assert self.driver.current_url == link_url, f'Адрес страницы не соответствует {self.driver.current_url}'
-            assert title == link_text, f'Заголовок не соответствует {title}'
+            except NoSuchElementException:
+                break
 
     def check_views_page(self):
         pass

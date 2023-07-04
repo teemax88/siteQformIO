@@ -33,6 +33,7 @@ class BaseMethods(Utils):
         return locating[find_by]
 
     """Операции с одиночными элементами"""
+
     def is_visible(self, find_by: str, locator: str) -> WebElement:
         return self.__wait.until(ec.visibility_of_element_located((self.__get_selenium_by(find_by), locator)))
 
@@ -61,6 +62,7 @@ class BaseMethods(Utils):
         return element.get_attribute(attribute)
 
     """Операции с несколькими элементами"""
+
     def are_visible(self, find_by: str, locator: str) -> List[WebElement]:
         return self.__wait.until(ec.visibility_of_all_elements_located((self.__get_selenium_by(find_by), locator)))
 

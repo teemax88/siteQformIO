@@ -1,6 +1,4 @@
 class FormsPage:
-    # def __init__(self, driver):
-    #     self.driver = driver
 
     """Панель навигации"""
 
@@ -10,14 +8,25 @@ class FormsPage:
         return "//div[@class='nav-item-dropdown']/div[contains(@class, 'content')]"
 
     @property
-    # Раздел Виды в навигации
-    def views_item(self) -> str:
+    # Выпадающий список Виды в навигации
+    def views_dropdown(self) -> str:
         return "//ul[contains(@class, 'nav')]//li[contains(@class, 'dropdown')]"
 
+    # Список видов
+    def nav_views_item(self, section: int, item: int) -> str:
+        return f"//div[@class='nav-item-dropdown']/div[contains(@class, 'content')]/div[{section}]//li[{item}]/a"
+
     @property
-    # Список видов в навигации
-    def nav_views_list_items(self) -> str:
-        return "//div[contains(@class, 'content')]//ul[@class='list']//li[@class='list-item']/a"
+    # Ссылка Смотреть все
+    def see_all_link_on_form_views(self) -> str:
+        return "//div[@id='nav_Виды']//a[@class='link-more']"
+
+    @property
+    # Ссылка Смотреть все
+    def see_all_link_on_form_templates(self) -> str:
+        return "//div[@id='nav_Шаблоны']//a[@class='link-more']"
+
+
 
     """ Интерактивный слайдер """
 
@@ -45,4 +54,3 @@ class FormsPage:
     # Стрелка Next у слайдера
     def next_btn_slider(self) -> str:
         return "//div[contains(@class, 'thumb-slider')]//div[@class='swiper-button-next']"
-
